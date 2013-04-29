@@ -166,6 +166,11 @@ LOGGING = {
 
     },
     'loggers': {
+        'django': {
+            'handlers': ['mail_admins', 'file_all'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins', 'file_all'],
             'level': 'DEBUG',

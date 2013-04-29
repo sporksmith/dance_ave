@@ -8,11 +8,15 @@ from tropo import Tropo, Result, Choices
 import dance_ave.models as m
 from django.core.exceptions import ObjectDoesNotExist
 
+import logging
+log = logging.getLogger('django.dance_ave.models')
+
 class Home(View):
     def get(self, request):
         return HttpResponse("get response")
 
     def post(self, request):
+        log.debug('Root got: %s', request.body.__repr__())
         t = Tropo()
         t.ask(choices = Choices(value="[4 DIGITS]"), timeout=60, name="digit", say = "Enter song code")
         t.on(event = "continue", next ="/django/dance_ave/playcode")
@@ -28,12 +32,17 @@ class PlayCode(View):
     def post(self, request):
         t = Tropo()
         r = Result(request.body)
+        log.debug('PlayCode got: %s', request.body.__repr__())
 
         code = r.getValue()
         try:
             song = m.SongStation.objects.get(select_code=code)
-            t.say([song.audio_url])
         except ObjectDoesNotExist:
             t.say("Sorry, %s is an invalid code!" % code)
+            return HttpResponse(t.RenderJson())
 
+#        try:
+#            player = m
+
+        t.say([song.audio_url])
         return HttpResponse(t.RenderJson())
