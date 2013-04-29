@@ -12,5 +12,6 @@ class Home(View):
 
     def post(self, request):
         t = Tropo()
-        t.say("hello django")
+#        t.say("hello django")
+        t.say(['https://s3.amazonaws.com/dance_ave/Ikea.mp3'])
         return HttpResponse(t.RenderJson())
