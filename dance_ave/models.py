@@ -10,3 +10,7 @@ class Player(models.Model):
     address = models.CharField(max_length=100, db_index=True)
     completed_stations = models.ManyToManyField(SongStation)
 
+class Session(models.Model):
+    identifier = models.CharField(max_length=100, db_index=True)
+    player = models.ForeignKey(Player)
+
