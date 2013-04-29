@@ -1,1 +1,5 @@
 /venv
+*.swp
+*~
+db.sql3
+/static
