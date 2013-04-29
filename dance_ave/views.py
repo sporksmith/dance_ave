@@ -4,7 +4,7 @@ from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
-from tropo import Tropo, Result, Choices
+from tropo import Tropo, Result, Choices, Session
 import dance_ave.models as m
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -17,6 +17,17 @@ class Home(View):
 
     def post(self, request):
         log.debug('Root got: %s', request.body.__repr__())
+
+        s = Session(request.body)
+        sessionid = s.id
+        fromaddress = s.fromaddress['id']
+        player, created = m.Player.objects.get_or_create(address=fromaddress)
+        s_obj, created = m.Session.objects.get_or_create(
+                identifier=sessionid,
+                defaults={ 'player': player },
+                )
+        assert(created or s_obj.player.address == fromaddress)
+
         t = Tropo()
         t.ask(choices = Choices(value="[4 DIGITS]"), timeout=60, name="digit", say = "Enter song code")
         t.on(event = "continue", next ="/django/dance_ave/playcode")
