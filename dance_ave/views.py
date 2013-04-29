@@ -45,12 +45,16 @@ class PlayCode(View):
         r = Result(request.body)
         log.debug('PlayCode got: %s', request.body.__repr__())
 
+        session = m.Session.objects.get(identifier=r._sessionId)
+
         code = r.getValue()
         try:
             song = m.SongStation.objects.get(select_code=code)
         except ObjectDoesNotExist:
             t.say("Sorry, %s is an invalid code!" % code)
             return HttpResponse(t.RenderJson())
+
+        session.player.completed_stations.add(song)
 
 #        try:
 #            player = m
