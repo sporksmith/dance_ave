@@ -5,3 +5,4 @@ db.sql3
 /static
 *.pyc
 *.pyc
+/log
