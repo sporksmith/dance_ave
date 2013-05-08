@@ -84,6 +84,8 @@ class PlayCode(View):
             song = m.SongStation.objects.get(select_code=code)
         except ObjectDoesNotExist:
             t.say("Sorry, %s is an invalid code!" % code)
+            t.ask(choices = Choices(value="[4 DIGITS]"), timeout=60, name="digit", say = "Enter song code")
+            t.on(event = "continue", next ="/django/dance_ave/playcode")
             return HttpResponse(t.RenderJson())
 
         session.player.completed_stations.add(song)
