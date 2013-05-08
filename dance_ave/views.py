@@ -20,11 +20,14 @@ from operator import itemgetter, attrgetter
 def dashboard(request):
     players = [ p for p in m.Player.objects.all() ]
     players = sorted( players, key = attrgetter('completed_stations_count'))
+
+    stations = m.SongStation.objects.all()
     return render(
             request,
             'dance_ave/dashboard.html',
             {
                 'players': players,
+                'stations': stations,
             },
             )
 

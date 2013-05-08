@@ -1,6 +1,4 @@
-Hello template
-
-<h2>Players</h2>
+<h1>Players</h1>
 
 <table>
     <tr>
@@ -14,3 +12,19 @@ Hello template
     </tr>
     {% endfor %}
 </table>
+
+<h1>Stations</h1>
+
+<table>
+    <tr>
+        <th>URL</th>
+        <th>Code</th>
+    </tr>
+    {% for station in stations %}
+    <tr>
+        <td>{{ station.audio_url }}</td>
+        <td>{{ station.select_code }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
