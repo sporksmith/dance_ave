@@ -9,6 +9,14 @@ class PlayerAdmin(admin.ModelAdmin):
 
 class SongStationAdmin(admin.ModelAdmin):
     list_display = (
+            'id',
+            'audio_url',
+            'select_code',
+            )
+    list_links= (
+            'id',
+            )
+    list_editable = (
             'audio_url',
             'select_code',
             )
