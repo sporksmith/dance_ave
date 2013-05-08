@@ -1,0 +1,16 @@
+Hello template
+
+<h2>Players</h2>
+
+<table>
+    <tr>
+        <th>Address</th>
+        <th>Completed</th>
+    </tr>
+    {% for player in players %}
+    <tr>
+        <td>{{ player.address }}</td>
+        <td>{{ player.completed_stations_count }}</td>
+    </tr>
+    {% endfor %}
+</table>

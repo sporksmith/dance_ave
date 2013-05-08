@@ -11,6 +11,23 @@ from django.core.exceptions import ObjectDoesNotExist
 import logging
 log = logging.getLogger('django.dance_ave.models')
 
+from django.contrib.auth.decorators import permission_required, user_passes_test, login_required
+from django.shortcuts import render, get_object_or_404
+
+from operator import itemgetter, attrgetter
+
+@login_required
+def dashboard(request):
+    players = [ p for p in m.Player.objects.all() ]
+    players = sorted( players, key = attrgetter('completed_stations_count'))
+    return render(
+            request,
+            'dance_ave/dashboard.html',
+            {
+                'players': players,
+            },
+            )
+
 class Home(View):
     def get(self, request):
         return HttpResponse("get response")
