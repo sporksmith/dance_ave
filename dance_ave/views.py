@@ -90,8 +90,8 @@ class PlayCode(View):
 
         session.player.completed_stations.add(song)
 
-#        try:
-#            player = m
+        if session.player.completed_stations.count() == m.SongStation.objects.count():
+            t.say("You win")
 
         t.say([song.audio_url])
         return HttpResponse(t.RenderJson())
