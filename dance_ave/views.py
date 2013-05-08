@@ -27,7 +27,7 @@ def reset_game():
 
 @login_required
 def dashboard(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.POST.get('reset_confirm1') and request.POST.get('reset_confirm2'):
         reset_game()
 
     players = [ p for p in m.Player.objects.all() ]

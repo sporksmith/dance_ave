@@ -1,3 +1,4 @@
+
 <h1>Players</h1>
 
 <table>
@@ -28,6 +29,19 @@
     {% endfor %}
 </table>
 
+<br>
+<br>
 <form method="post">{% csrf_token %}
-    <input type="submit" value="RESET GAME">
+<table width="100%">
+    <tr>
+        <td><input type="checkbox" name="reset_confirm1" value="confirm">Reset?</td>
+        <td><input type="checkbox" name="reset_confirm2" value="confirm">Really reset?</td>
+        <td><input type="submit" value="RESET GAME"></td>
+    </tr>
+</table>
 </form>
+
+<br>
+<br>
+<a href="{% url "admin:index" %}">Admin site</a>
+
