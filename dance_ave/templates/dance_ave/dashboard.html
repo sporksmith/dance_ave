@@ -5,11 +5,13 @@
     <tr>
         <th>Address</th>
         <th>Completed</th>
+        <th>Finish time</th>
     </tr>
     {% for player in players %}
     <tr>
         <td>{{ player.address }}</td>
         <td>{{ player.completed_stations_count }}</td>
+        <td>{{ player.finish_time }}</td>
     </tr>
     {% endfor %}
 </table>

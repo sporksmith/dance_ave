@@ -4,6 +4,7 @@ from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
+from django.utils.timezone import now
 from tropo import Tropo, Result, Choices, Session
 import dance_ave.models as m
 from django.core.exceptions import ObjectDoesNotExist
@@ -92,9 +93,13 @@ class PlayCode(View):
             t.on(event = "continue", next ="/django/dance_ave/playcode")
             return HttpResponse(t.RenderJson())
 
-        session.player.completed_stations.add(song)
+        player = session.player
+        player.completed_stations.add(song)
 
-        if session.player.completed_stations.count() == m.SongStation.objects.count():
+        if player.completed_stations.count() == m.SongStation.objects.count():
+            if not player.finish_time:
+                player.finish_time = now()
+                player.save()
             t.say("You win")
 
         t.say([song.audio_url])

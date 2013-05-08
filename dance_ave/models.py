@@ -9,6 +9,7 @@ class SongStation(models.Model):
 class Player(models.Model):
     address = models.CharField(max_length=100, db_index=True)
     completed_stations = models.ManyToManyField(SongStation)
+    finish_time = models.DateTimeField(blank=True, null=True)
 
     def completed_stations_count(self):
         return self.completed_stations.count()
