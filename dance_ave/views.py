@@ -31,7 +31,11 @@ def dashboard(request):
         reset_game()
 
     players = [ p for p in m.Player.objects.all() ]
-    players = sorted( players, key = attrgetter('completed_stations_count'))
+    players = sorted(
+            players,
+            key = attrgetter('completed_stations_count'),
+            reverse=True,
+            )
 
     stations = m.SongStation.objects.all()
     return render(
