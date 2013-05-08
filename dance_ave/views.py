@@ -12,12 +12,24 @@ import logging
 log = logging.getLogger('django.dance_ave.models')
 
 from django.contrib.auth.decorators import permission_required, user_passes_test, login_required
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
 
 from operator import itemgetter, attrgetter
 
+import random
+def reset_game():
+    for station in m.SongStation.objects.all():
+        station.select_code = ''.join([ random.choice('0123456789') for x in range(4) ])
+        station.save()
+
+    m.Player.objects.all().delete()
+
 @login_required
 def dashboard(request):
+    if request.method == 'POST':
+        reset_game()
+
     players = [ p for p in m.Player.objects.all() ]
     players = sorted( players, key = attrgetter('completed_stations_count'))
 
