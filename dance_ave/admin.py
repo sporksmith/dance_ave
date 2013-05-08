@@ -4,7 +4,7 @@ from dance_ave.models import Player, SongStation
 class PlayerAdmin(admin.ModelAdmin):
     list_display = (
             'address',
-#            'completed_stations',
+            'completed_stations_count',
             )
 
 class SongStationAdmin(admin.ModelAdmin):
