@@ -86,8 +86,16 @@ class PlayCode(View):
         log.debug('PlayCode got: %s', request.body.__repr__())
 
         session = m.Session.objects.get(identifier=r._sessionId)
+            
+        # look for song code in URL (query string) first
+        # we use this mechanism to restart the current song
+        code = request.GET.get('code')
 
-        code = r.getValue()
+        # failing that, look in the payload.
+        # this is the "main" mechanism, where the user actually entered the code
+        if not code:
+            code = r.getValue()
+
         try:
             song = m.SongStation.objects.get(select_code=code)
         except ObjectDoesNotExist:
@@ -116,4 +124,5 @@ class PlayCode(View):
                 say = song.audio_url,
                 )
         t.on(event = "continue", next ="/django/dance_ave/playcode")
+        t.on(event = "incomplete", next ="/django/dance_ave/playcode?code=%s" % code)
         return HttpResponse(t.RenderJson())
