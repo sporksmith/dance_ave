@@ -66,7 +66,7 @@ class Home(View):
         assert(created or s_obj.player.address == fromaddress)
 
         t = Tropo()
-        t.ask(choices = Choices(value="[4 DIGITS]"),
+        t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
                 timeout=60,
                 name="digit",
                 say = "Enter song code")
@@ -92,7 +92,7 @@ class PlayCode(View):
             song = m.SongStation.objects.get(select_code=code)
         except ObjectDoesNotExist:
             t.say("Sorry, %s is an invalid code!" % code)
-            t.ask(choices = Choices(value="[4 DIGITS]"),
+            t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
                     timeout=60,
                     name="digit",
                     say = "Enter song code")
