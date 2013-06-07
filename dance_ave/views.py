@@ -52,6 +52,7 @@ class Home(View):
     def get(self, request):
         return HttpResponse("get response")
 
+    @method_decorator(csrf_exempt)
     def post(self, request):
         log.debug('Root got: %s', request.body.__repr__())
 
@@ -81,6 +82,7 @@ class PlayCode(View):
     def get(self, request):
         return HttpResponse("get response")
 
+    @method_decorator(csrf_exempt)
     def post(self, request):
         t = Tropo()
         r = Result(request.body)
