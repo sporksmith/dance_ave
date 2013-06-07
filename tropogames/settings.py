@@ -6,6 +6,7 @@ TEMPLATE_DEBUG = DEBUG
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
+ALLOWED_HOSTS = ['.amazonaws.com']
 
 MANAGERS = ADMINS
 
