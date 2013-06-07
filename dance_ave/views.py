@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from django.utils.timezone import now
-from tropo import Tropo, Result, Choices, Session
+from tropo import Tropo, Result, Choices, Session, Say
 import dance_ave.models as m
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -108,5 +108,12 @@ class PlayCode(View):
                 player.save()
             t.say("You win")
 
-        t.say([song.audio_url])
+#        t.say([song.audio_url])
+        t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
+                bargein=True,
+                timeout=5,
+                name="digit",
+                say = song.audio_url,
+                )
+        t.on(event = "continue", next ="/django/dance_ave/playcode")
         return HttpResponse(t.RenderJson())
