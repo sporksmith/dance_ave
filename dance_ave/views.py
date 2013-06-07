@@ -63,6 +63,7 @@ class Home(View):
                 identifier=sessionid,
                 defaults={ 'player': player },
                 )
+        log.info("Player %s started session %s", player, s)
         assert(created or s_obj.player.address == fromaddress)
 
         t = Tropo()
@@ -109,6 +110,9 @@ class PlayCode(View):
 
         player = session.player
         player.completed_stations.add(song)
+
+        log.info("Player %s completed station %s", player, song)
+        log.info("Player %s has now completed %d stations", player, player.completed_stations.count())
 
         if player.completed_stations.count() == m.SongStation.objects.count():
             if not player.finish_time:
