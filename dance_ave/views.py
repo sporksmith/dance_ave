@@ -20,9 +20,9 @@ from operator import itemgetter, attrgetter
 
 import random
 def reset_game():
-    for station in m.SongStation.objects.all():
-        station.select_code = ''.join([ random.choice('0123456789') for x in range(4) ])
-        station.save()
+#    for station in m.SongStation.objects.all():
+#        station.select_code = ''.join([ random.choice('0123456789') for x in range(4) ])
+#        station.save()
 
     m.Player.objects.all().delete()
 
