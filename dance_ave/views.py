@@ -89,6 +89,10 @@ class PlayCode(View):
         log.debug('PlayCode got: %s', request.body.__repr__())
 
         session = m.Session.objects.get(identifier=r._sessionId)
+
+        if r._state == 'DISCONNECTED':
+            log.info('player %s disconnected', session.player)
+            return HttpResponse(t.RenderJson())
             
         # look for song code in URL (query string) first
         # we use this mechanism to restart the current song
