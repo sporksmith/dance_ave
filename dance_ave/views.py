@@ -122,6 +122,7 @@ class PlayCode(View):
         try:
             code = r.getValue()
         except KeyError:
+            t.say("Please try again.")
             code = None
 
         # if there's a code, try changing the station
