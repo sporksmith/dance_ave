@@ -89,14 +89,13 @@ class Home(View):
                 identifier=sessionid,
                 defaults={ 'player': player },
                 )
-        log.info("Player %s started session %s", player, s)
-        assert(created or s_obj.player.address == fromaddress)
+        log.info("Player %s started session %s", player, s_obj)
 
         t = Tropo()
         if player_created:
-            t.say("Welcome back to Dance Avenue!")
+            t.say("Welcome to Dance Avenue, new player!")
         else:
-            t.say("Welceome to Dance Avenue, new player!")
+            t.say("Welcome back to Dance Avenue!")
 
         prompt_player(t, player)
 
