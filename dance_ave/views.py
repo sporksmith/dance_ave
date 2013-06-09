@@ -99,7 +99,10 @@ class Home(View):
             t.say("Welceome to Dance Avenue, new player!")
 
         prompt_player(t, player)
-        return HttpResponse(t.RenderJson())
+
+        tropo_response = t.RenderJson()
+        log.debug('Root returning %s', tropo_response)
+        return HttpResponse(tropo_response)
 
 class PlayCode(View):
     def get(self, request):
@@ -136,4 +139,7 @@ class PlayCode(View):
                 t.say("Sorry, %s is invalid" % code)
 
         prompt_player(t, player)
-        return HttpResponse(t.RenderJson())
+
+        tropo_response = t.RenderJson()
+        log.debug('PlayCode returning %s', tropo_response)
+        return HttpResponse(tropo_response)
