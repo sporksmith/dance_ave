@@ -12,6 +12,7 @@ class SongStation(models.Model):
 class Player(models.Model):
     address = models.CharField(max_length=100, db_index=True)
     completed_stations = models.ManyToManyField(SongStation)
+    current_station = models.ForeignKey(SongStation, null=True, related_name='players_playing')
     finish_time = models.DateTimeField(blank=True, null=True)
 
     @property
