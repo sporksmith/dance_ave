@@ -89,50 +89,52 @@ class PlayCode(View):
         log.debug('PlayCode got: %s', request.body.__repr__())
 
         session = m.Session.objects.get(identifier=r._sessionId)
+        player = session.player
 
         if r._state == 'DISCONNECTED':
             log.info('player %s disconnected', session.player)
             return HttpResponse(t.RenderJson())
             
-        # look for song code in URL (query string) first
-        # we use this mechanism to restart the current song
-        code = request.GET.get('code')
-
-        # failing that, look in the payload.
-        # this is the "main" mechanism, where the user actually entered the code
-        if not code:
-            code = r.getValue()
-
+        # see if there's a user-entered code
         try:
-            song = m.SongStation.objects.get(select_code=code)
-        except ObjectDoesNotExist:
-            t.say("Sorry, %s is an invalid code!" % code)
-            t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
-                    timeout=60,
-                    name="digit",
-                    say = "Enter song code")
-            t.on(event = "continue", next ="/django/dance_ave/playcode")
-            return HttpResponse(t.RenderJson())
+            code = r.getValue()
+        except KeyError:
+            code = None
 
-        player = session.player
-        player.completed_stations.add(song)
+        # if there's a code, try changing the station
+        if code:
+            try:
+                song = m.SongStation.objects.get(select_code=code)
+                player.completed_stations.add(song)
+                player.current_station = song
+                player.save()
+            except ObjectDoesNotExist:
+                t.say("Sorry, %s is an invalid code!" % code)
 
-        log.info("Player %s completed station %s", player, song)
-        log.info("Player %s has now completed %d stations", player, player.completed_stations.count())
+        # report how many stations to go
+        stations_to_go = m.SongStation.objects.count() - player.completed_stations.count()
+        t.say("%d stations to go." % stations_to_go)
 
-        if player.completed_stations.count() == m.SongStation.objects.count():
+        # check if player has won
+        if stations_to_go == 0:
             if not player.finish_time:
                 player.finish_time = now()
                 player.save()
-            t.say("You win")
+            t.say("You win!")
 
-#        t.say([song.audio_url])
+        #log.info("Player %s completed station %s", player, song)
+        #log.info("Player %s has now completed %d stations", player, player.completed_stations.count())
+
+        # play prompt or current song
+        if player.current_station:
+            say_string = player.current_station.audio_url
+        else:
+            say_string = "Enter song code"
         t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
                 bargein=True,
                 timeout=5,
                 name="digit",
-                say = song.audio_url,
+                say = say_string,
                 )
         t.on(event = "continue", next ="/django/dance_ave/playcode")
-        t.on(event = "incomplete", next ="/django/dance_ave/playcode?code=%s" % code)
         return HttpResponse(t.RenderJson())
