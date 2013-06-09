@@ -84,8 +84,8 @@ class Home(View):
         s = Session(request.body)
         sessionid = s.id
         fromaddress = s.fromaddress['id']
-        player, created = m.Player.objects.get_or_create(address=fromaddress)
-        s_obj, created = m.Session.objects.get_or_create(
+        player, player_created = m.Player.objects.get_or_create(address=fromaddress)
+        s_obj, session_created = m.Session.objects.get_or_create(
                 identifier=sessionid,
                 defaults={ 'player': player },
                 )
@@ -93,7 +93,7 @@ class Home(View):
         assert(created or s_obj.player.address == fromaddress)
 
         t = Tropo()
-        if created:
+        if player_created:
             t.say("Welcome back to Dance Avenue!")
         else:
             t.say("Welceome to Dance Avenue, new player!")
