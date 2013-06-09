@@ -48,6 +48,31 @@ def dashboard(request):
             },
             )
 
+def prompt_player(t, player):
+    # report how many stations to go
+    stations_to_go = m.SongStation.objects.count() - player.completed_stations.count()
+    t.say("%d stations to go." % stations_to_go)
+
+    # check if player has won
+    if stations_to_go == 0:
+        if not player.finish_time:
+            player.finish_time = now()
+            player.save()
+        t.say("You win!")
+
+    # play prompt or current song
+    if player.current_station:
+        say_string = player.current_station.audio_url
+    else:
+        say_string = "Enter song code"
+    t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
+            bargein=True,
+            timeout=5,
+            name="digit",
+            say = say_string,
+            )
+    t.on(event = "continue", next ="/django/dance_ave/playcode")
+
 class Home(View):
     def get(self, request):
         return HttpResponse("get response")
@@ -111,30 +136,5 @@ class PlayCode(View):
             except ObjectDoesNotExist:
                 t.say("Sorry, %s is invalid" % code)
 
-        # report how many stations to go
-        stations_to_go = m.SongStation.objects.count() - player.completed_stations.count()
-        t.say("%d stations to go." % stations_to_go)
-
-        # check if player has won
-        if stations_to_go == 0:
-            if not player.finish_time:
-                player.finish_time = now()
-                player.save()
-            t.say("You win!")
-
-        #log.info("Player %s completed station %s", player, song)
-        #log.info("Player %s has now completed %d stations", player, player.completed_stations.count())
-
-        # play prompt or current song
-        if player.current_station:
-            say_string = player.current_station.audio_url
-        else:
-            say_string = "Enter song code"
-        t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
-                bargein=True,
-                timeout=5,
-                name="digit",
-                say = say_string,
-                )
-        t.on(event = "continue", next ="/django/dance_ave/playcode")
+        prompt_player(t, player)
         return HttpResponse(t.RenderJson())
