@@ -14,6 +14,7 @@ class Player(models.Model):
     completed_stations = models.ManyToManyField(SongStation)
     finish_time = models.DateTimeField(blank=True, null=True)
 
+    @property
     def completed_stations_count(self):
         return self.completed_stations.count()
 
