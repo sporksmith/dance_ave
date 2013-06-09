@@ -109,7 +109,7 @@ class PlayCode(View):
                 player.current_station = song
                 player.save()
             except ObjectDoesNotExist:
-                t.say("Sorry, %s is an invalid code!" % code)
+                t.say("Sorry, %s is invalid" % code)
 
         # report how many stations to go
         stations_to_go = m.SongStation.objects.count() - player.completed_stations.count()
