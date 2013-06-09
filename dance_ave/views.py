@@ -93,14 +93,12 @@ class Home(View):
         assert(created or s_obj.player.address == fromaddress)
 
         t = Tropo()
-        t.ask(choices = Choices(value="[4 DIGITS]", mode="dtmf"),
-                timeout=60,
-                name="digit",
-                say = "Enter song code")
-        t.on(event = "continue", next ="/django/dance_ave/playcode")
+        if created:
+            t.say("Welcome back to Dance Avenue!")
+        else:
+            t.say("Welceome to Dance Avenue, new player!")
 
-#        t.say("hello django")
-#        t.say(['https://s3.amazonaws.com/dance_ave/Ikea.mp3'])
+        prompt_player(t, player)
         return HttpResponse(t.RenderJson())
 
 class PlayCode(View):
