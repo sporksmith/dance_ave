@@ -15,13 +15,13 @@ You'll probably also want to enable the Django admin site, which we use for auth
 the song stations.
 e.g.:
 
-  urlpatterns = patterns('',
-      ...
-      url(r'^dance_ave/', include('dance_ave.urls')),
-      ...
-      url(r'^admin/', include(admin.site.urls)),
-      ...
-      )
+    urlpatterns = patterns('',
+        ...
+        url(r'^dance_ave/', include('dance_ave.urls')),
+        ...
+        url(r'^admin/', include(admin.site.urls)),
+        ...
+        )
       
 Tropo setup
 -----------
