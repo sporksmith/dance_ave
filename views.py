@@ -3,7 +3,8 @@
 from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 from tropo import Tropo, Result, Choices, Session, Say
 import dance_ave.models as m
@@ -30,6 +31,7 @@ def reset_game():
 def dashboard(request):
     if request.method == 'POST' and request.POST.get('reset_confirm1') and request.POST.get('reset_confirm2'):
         reset_game()
+        return HttpResponseRedirect(reverse('dashboard'))
 
     players = [ p for p in m.Player.objects.all() ]
     players = sorted(
